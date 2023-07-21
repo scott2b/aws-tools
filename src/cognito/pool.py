@@ -1,6 +1,6 @@
 import os
 import boto3
-from .client import cognito_client
+from .awsclient import cognito_client
 
 
 def create_pool(*, pool_name):
