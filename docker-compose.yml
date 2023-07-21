@@ -11,4 +11,4 @@ services:
       - LOCALSTACK_SERVICES=cognito
       - LOCALSTACK_API_KEY=${LOCALSTACK_API_KEY-}
     volumes:
-      - ./volumes/localstack/state:/var/lib/localstack/state
+      - ./.volumes/localstack/state:/var/lib/localstack/state
