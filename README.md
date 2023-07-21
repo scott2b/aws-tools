@@ -43,9 +43,52 @@ docker compose up
 
 Alternatively, just use a real AWS account. There is a pretty good free tier for a lot of things.
 
+Config stuff TBD
+
 
 ## The toolkit
 
  - **Cognito** This is the primary focus of what is currently in development
 
 Hopefully, more to come. S3 is the most likely thing on deck.
+
+
+## Using the toolkit
+
+Install dependencies:
+
+```
+pip install -r requirements.txt
+```
+
+Put `src` on your `PYTHONPATH`
+
+```
+export PYTHONPATH=src:PYTHONPATH
+```
+
+### General help
+
+```
+python -m awstools --help
+```
+
+### cognito
+
+```
+python -m awstools cognito --help
+```
+
+## Contributing
+
+Install development dependencies
+
+```
+pip install -r requirements-dev.txt
+```
+
+Run tests
+
+```
+tox
+```
