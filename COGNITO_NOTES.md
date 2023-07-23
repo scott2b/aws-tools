@@ -48,6 +48,9 @@ use cases I have in mind.
    recommended (required?) to prefix these attributes with `custom:`, and it is still
    unclear when these attributes may or may not show up in User responses.
 
+ - In any case, use the UUID (aka `Username` aka `sub`) as the primary identifier for your
+   users, rather than the username or email or phone number.
+
  - Don't pass auth tokens to your users until your application really needs it. I am
    still trying to understand the use cases for this. Maybe you can give your users
    direct access to AWS resources? But then ask yourself why, and if you understand this
