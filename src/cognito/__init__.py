@@ -4,8 +4,9 @@ import boto3
 from .awsclient import cognito_client
 from .client import create_client as _create_client
 from .pool import create_pool as _create_pool
-from .user import signup_user, confirm_user, login_user, list_users, get_user
+from .user import signup_user, confirm_user, login_user, list_users, get_user, authenticate_user
 from .user import create_user as _create_user
+from .user import update_user as _update_user
 from .tables import CognitoPoolModel, CognitoClientModel
 
 
@@ -82,6 +83,17 @@ def login(client_id: str, username: str, password: str):
 
 
 @app.command()
+def authenticate(pool_id: str, client_id: str, username: str, password: str):
+    response = authenticate_user(
+        pool_id=pool_id,
+        client_id=client_id,
+        username=username,
+        password=password
+    )
+    print(response)
+
+
+@app.command()
 def users(pool_id: str):
     response = list_users(pool_id=pool_id)
     print(response)
@@ -90,6 +102,18 @@ def users(pool_id: str):
 @app.command()
 def user(pool_id: str, username: str):
     response = get_user(pool_id=pool_id, username=username)
+    print(response)
+
+from typing import List, Optional
+
+
+@app.command()
+def update_user(pool_id: str, username: str, attr: Optional[List[str]]=typer.Option(None)):
+    if attr:
+        attributes = { k:v for k,v in [a.split("=") for a in attr] }
+    else:
+        exit("At least one attr required.")
+    response = _update_user(pool_id=pool_id, username=username, attributes=attributes)
     print(response)
 
 

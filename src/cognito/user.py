@@ -109,6 +109,27 @@ def login_user(*, client_id:str, username:str, password: str):
         print("User login failed:", e)
 
 
+
+def authenticate_user(*, pool_id:str, client_id: str, username:str, password: str):
+    """This is like login but uses the AdminInitiateAuth. Which strangely requires
+    both a pool and a client.
+    """
+    try:
+        response = cognito_client.admin_initiate_auth(
+            UserPoolId=pool_id,
+            ClientId=client_id,
+            AuthFlow='USER_PASSWORD_AUTH',
+            AuthParameters={
+                'USERNAME': username,
+                'PASSWORD': password
+            }
+        )
+        return response
+    except Exception as e:
+        print("User login failed:", e)
+
+
+
 def list_users(*, pool_id: str, attributes: list[str]=None, page_token:str=None, filter:str=None):
     """
     boto docs:
@@ -128,10 +149,21 @@ def list_users(*, pool_id: str, attributes: list[str]=None, page_token:str=None,
 
 
 def get_user(*, pool_id: str, username: str):
+    """username can be either the `Username` (aka `sub`) which is the AWS-assigned UUID,
+    or can be the username that was provided when the user was created or registered.
+    """
     response = cognito_client.admin_get_user(
         UserPoolId=pool_id,
         Username=username
     )
-    print(response)
     return response
 
+
+def update_user(*, pool_id: str, username: str, attributes: dict[str:str]):
+    attributes = [ { "Name":k, "Value": v } for k,v in attributes.items() ]
+    response = cognito_client.admin_update_user_attributes(
+        UserPoolId=pool_id,
+        Username=username,
+        UserAttributes=attributes
+    )  
+    return response
