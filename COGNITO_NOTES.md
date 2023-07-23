@@ -33,7 +33,7 @@
 ### Recommendations (so far)
 
 Take this all with a grain of salt. I am just starting to get my head around this very
-convoluted API. These are my best guesses based on what I know now and spcifically for
+convoluted API. These are my best guesses based on what I know now and specifically for
 use cases I have in mind.
 
  - Use cognito as the de facto copy of identifying information, including:
