@@ -4,6 +4,10 @@ from .awsclient import cognito_client
 
 
 def create_pool(*, pool_name):
+    """
+    Compare to the AWS CLI:
+    [aws cognito-idp create-user-pool](https://docs.aws.amazon.com/cli/latest/reference/cognito-idp/create-user-pool.html)
+    """
     password_policy = {
         'MinimumLength': 6,
         'RequireUppercase': False,

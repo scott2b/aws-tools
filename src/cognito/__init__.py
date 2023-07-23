@@ -5,6 +5,8 @@ from .awsclient import cognito_client
 from .client import create_client as _create_client
 from .pool import create_pool as _create_pool
 from .user import signup_user, confirm_user, login_user
+from .tables import CognitoPoolModel, CognitoClientModel
+
 
 app = typer.Typer()
 
@@ -19,7 +21,10 @@ def create_pool(name: str):
 
 @app.command()
 def pools():
-    pools = cognito_client.list_user_pools(MaxResults=100)
+    pools = cognito_client.list_user_pools(MaxResults=100)["UserPools"]
+    for pool in pools:
+        model = CognitoPoolModel(**pool)
+        print(model)
     print(pools)
 
 @app.command()
@@ -33,6 +38,9 @@ def clients(pool_id: str):
         UserPoolId=pool_id,
         MaxResults=100
     )
+    for client in response["UserPoolClients"]:
+        model = CognitoClientModel(**client)
+        print(model)
     print(response)
 
 

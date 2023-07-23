@@ -1,5 +1,6 @@
 import os
 from .awsclient import cognito_client
+from .tables import User, UserAuthModel
 
 
 def signup_user(*, client_id: str, email:str, password:str):
@@ -71,8 +72,10 @@ def login_user(*, client_id:str, username:str, password: str):
         )
         access_token = response['AuthenticationResult']['AccessToken']
         user = cognito_client.get_user(AccessToken=access_token)
+        user = User.from_response(user)
+        auth = UserAuthModel(**response)
         return {
-            "auth": response,
+            "auth": auth,
             "user": user
         }
     except Exception as e:
