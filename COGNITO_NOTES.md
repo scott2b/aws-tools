@@ -445,6 +445,8 @@ Finally, list the users to see that both processes end up with similar looking o
 So, our `cognito` namespaced username that was previously missing is here now. (Although,
 recall that it is not include in a get-user request)
 
+Notably: there is no temporary password, so, like, how is this even supposed to work?
+
 
 ### A note about getting users
 
