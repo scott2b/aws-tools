@@ -45,9 +45,20 @@ class CognitoClient(Table):
     user_pool_id = ForeignKey(references=CognitoPool)
     client_name = Varchar(length=256)
 
+#{'Username': '64d49acb-5316-418f-85ed-9d56741e2a04', 'Attributes': [{'Name': 'cognito:username', 'Value': 'scott@example.com'}, {'Name': 'email', 'Value': 'scott@example.com'}, {'Name': 'sub', 'Value': '64d49acb-5316-418f-85ed-9d56741e2a04'}], 'UserCreateDate': datetime.datetime(2023, 7, 22, 20, 15, 24, 356803, tzinfo=tzlocal()), 'UserLastModifiedDate': datetime.datetime(2023, 7, 22, 20, 15, 24, 356803, tzinfo=tzlocal()), 'Enabled': True, 'UserStatus': 'CONFIRMED'}
 
 class User(Table):
+    """
+    QUESTION: Should this be a table or should we always fetch the User from the API?
 
+
+    So far, the username seems to be identical to the sub (meaning "subject") attribute,
+    but it is not clear if this is always the case, so we track both. `username` is
+    given identity priority since it is at the top level of a User response and not
+    consdiered to be an "attribute". 
+    """
+
+    username = UUID(primary_key=True)
     sub = UUID()
     email = Email()
 
@@ -55,6 +66,9 @@ class User(Table):
     def from_response(cls, data):
         """Build a validated User model from an AWS Cognito API response for a Cognito
         User.
+
+        AWS User responses are inconsistent: they sometimes contain `UserAttributes` and
+        other times simply `Attributes`.
         """
         _ = {}
         for attr in data["UserAttributes"]:

@@ -92,3 +92,10 @@ Run tests
 ```
 tox
 ```
+
+## Relevant Documentation
+
+ - [AWS CLI cognit-idp command reference](https://docs.aws.amazon.com/cli/latest/reference/cognito-idp/index.html#cli-aws-cognito-idp)
+ - [Boto3 CognitoIdentityProvider documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp.html)
+
+

@@ -3,6 +3,33 @@ from .awsclient import cognito_client
 from .tables import User, UserAuthModel
 
 
+def create_user(*, pool_id: str, email: str):
+    response = cognito_client.admin_create_user(
+        UserPoolId=pool_id,
+        Username=email,
+        UserAttributes=[
+            {
+                'Name': 'email',
+                'Value': email
+            },
+        ],
+        #ValidationData=[
+        #    {
+        #        'Name': 'string',
+        #        'Value': 'string'
+        #    },
+        #],
+        #TemporaryPassword='string',
+        #ForceAliasCreation=True|False,
+        #MessageAction='RESEND'|'SUPPRESS',
+        DesiredDeliveryMediums=['EMAIL'], # 'EMAIL', 'SMS'
+        #ClientMetadata={
+        #    'string': 'string'
+        #}
+    )
+    return response
+
+
 def signup_user(*, client_id: str, email:str, password:str):
     """When using Localstack, if SMTP is not configured, a successful signup will print
     the new user's confirmation code to the Localstack conole logs.
@@ -80,3 +107,31 @@ def login_user(*, client_id:str, username:str, password: str):
         }
     except Exception as e:
         print("User login failed:", e)
+
+
+def list_users(*, pool_id: str, attributes: list[str]=None, page_token:str=None, filter:str=None):
+    """
+    boto docs:
+    https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/list_users.html
+    """
+    kwargs = {
+        "UserPoolId": pool_id,
+        "AttributesToGet": attributes or []
+    }
+    if page_token is not None:
+        kwargs["PaginationToken"] = page_token
+    if filter is not None:
+        kwargs["Filter"] = filter
+    response = cognito_client.list_users(**kwargs)
+    print(response)
+    return [User.from_response(user) for user in response["Users"]]
+
+
+def get_user(*, pool_id: str, username: str):
+    response = cognito_client.admin_get_user(
+        UserPoolId=pool_id,
+        Username=username
+    )
+    print(response)
+    return response
+

@@ -4,7 +4,8 @@ import boto3
 from .awsclient import cognito_client
 from .client import create_client as _create_client
 from .pool import create_pool as _create_pool
-from .user import signup_user, confirm_user, login_user
+from .user import signup_user, confirm_user, login_user, list_users, get_user
+from .user import create_user as _create_user
 from .tables import CognitoPoolModel, CognitoClientModel
 
 
@@ -45,6 +46,12 @@ def clients(pool_id: str):
 
 
 @app.command()
+def create_user(pool_id: str, email: str):
+    response = _create_user(pool_id=pool_id, email=email)
+    print(response)
+
+
+@app.command()
 def signup(client_id: str, email:str, password:str):
     response = signup_user(
         client_id=client_id,
@@ -71,6 +78,18 @@ def login(client_id: str, username: str, password: str):
         username=username,
         password=password
     )
+    print(response)
+
+
+@app.command()
+def users(pool_id: str):
+    response = list_users(pool_id=pool_id)
+    print(response)
+
+
+@app.command()
+def user(pool_id: str, username: str):
+    response = get_user(pool_id=pool_id, username=username)
     print(response)
 
 
